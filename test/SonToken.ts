@@ -13,7 +13,7 @@ describe("SonToken", function () {
     const SonToken = await ethers.getContractFactory("SonToken");
     const stableCoin = await ethers.getContractFactory("USDT")
     const USDT = await stableCoin.deploy();
-    const sonToken = await SonToken.deploy(USDT.target);
+    const sonToken = await SonToken.deploy();
 
     return { USDT, sonToken, owner, buyer };
   }
@@ -25,8 +25,7 @@ describe("SonToken", function () {
       await sonToken.setIsBuyer(buyer, true);
       await sonToken.setMaxAmount(buyer, 100);
       await sonToken.setPrice(buyer, 10);
-      await USDT.connect(buyer).approve(sonToken.target,50)
-      await sonToken.connect(buyer)._buyToken(50);
+      await sonToken.connect(buyer)._buyToken({ value: ethers.parseEther("50") });
       const balance = await sonToken.balanceOf(buyer)
       expect(balance).to.equal(5)
     });

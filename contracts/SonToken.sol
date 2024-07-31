@@ -4,24 +4,21 @@ import {Ownable} from "node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 contract SonToken is ERC20, Ownable {
-    uint public cap = 1000000;
     address payable private withdrawWallet;
     struct Whitelist{
         bool isBuyer;
         uint maxAmount; // maximum amount token can buy
         uint boughtAmount; // amount token bought
-        uint price; // rate token/USDT
+        uint price; // rate token/ETH
     }
     mapping(address => Whitelist) buyers;
-    IERC20 USDT;
     event buyToken(address buyer, uint tokenAmount, uint price);
 
-    constructor( IERC20 stableToken ) ERC20("SonToken", "STK") Ownable(msg.sender){
-        USDT = stableToken;
+    constructor() ERC20("SonToken", "STK") Ownable(msg.sender){
         withdrawWallet = payable(owner());
     }
 
-    // Set wallet receive USDT
+    // Set wallet receive ETH
     function setWithdrawWallet(address payable _withdrawWallet) public onlyOwner{
         withdrawWallet = _withdrawWallet;
     }
@@ -38,18 +35,18 @@ contract SonToken is ERC20, Ownable {
     }
     
     // Crowdsale
-    function _buyToken(uint USDTAmount) public {
-        // maximum can buy token
-        uint avaiableTokenAmount = buyers[msg.sender].maxAmount - buyers[msg.sender].boughtAmount;
+    function _buyToken() payable public {
+        uint ETHAmount = msg.value/1 ether;
         // amount token want to buy
-        uint tokenAmount = USDTAmount/(buyers[msg.sender].price);
+        uint tokenAmount = ETHAmount/(buyers[msg.sender].price);
+
         
         require(buyers[msg.sender].isBuyer, "You do not have permission to buy");
-        require(USDT.balanceOf(msg.sender) >= USDTAmount, "Insufficient account balance");
-        require(avaiableTokenAmount >= tokenAmount, "Amount is more than avaiable token can buy");
+        require(msg.sender.balance >= ETHAmount, "Insufficient account balance");
+        require(buyers[msg.sender].maxAmount >= tokenAmount + buyers[msg.sender].boughtAmount, "Amount is more than avaiable token can buy");
         
         buyers[msg.sender].boughtAmount += tokenAmount;
-        USDT.transferFrom(msg.sender, withdrawWallet, USDTAmount);
+        withdrawWallet.transfer(ETHAmount);
         _mint(msg.sender, tokenAmount);
         
         emit buyToken(msg.sender, tokenAmount, buyers[msg.sender].price);
