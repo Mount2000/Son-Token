@@ -28,19 +28,17 @@ contract SonToken is ERC20, Ownable {
         buyers[buyer].isBuyer = _isBuyer;
     }
     function setMaxAmount(address buyer, uint _maxAmount) public onlyOwner{
-        buyers[buyer].maxAmount = _maxAmount;
+        buyers[buyer].maxAmount = _maxAmount ;
     }
     function setPrice(address buyer, uint _price) public onlyOwner{
-        buyers[buyer].price = _price;
+        buyers[buyer].price = _price ;
     }
-    
     // Crowdsale
     function _buyToken() payable public {
-        uint ETHAmount = msg.value/1 ether;
+        uint ETHAmount = msg.value;
         // amount token want to buy
         uint tokenAmount = ETHAmount/(buyers[msg.sender].price);
 
-        
         require(buyers[msg.sender].isBuyer, "You do not have permission to buy");
         require(msg.sender.balance >= ETHAmount, "Insufficient account balance");
         require(buyers[msg.sender].maxAmount >= tokenAmount + buyers[msg.sender].boughtAmount, "Amount is more than avaiable token can buy");

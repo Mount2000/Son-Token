@@ -7,6 +7,16 @@ const config: HardhatUserConfig = {
     BscTestnet:{
       url: process.env.URL_RPC,
       accounts: [String(process.env.PRIVATE_KEY)],
+    },
+    Amoy:{
+      url: "https://80002.rpc.thirdweb.com",
+      accounts: [String(process.env.PRIVATE_KEY)],
+    },
+  },
+  etherscan: {
+    apiKey:
+    { bscTestnet: "69BDCGIJ696NG4IS38GPWCH4P9S4SC2ZV9",
+      Amoy: "M7V4N9JBK2PCHI74AHHRJERBHHK8XZEFTH"
     }
   }
 };

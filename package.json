@@ -1,4 +1,5 @@
 {
+  "genContractType": "abi-types-generator './public/contracts/YourContractName.json' --output='./types' --name=whateverName --provider=ethers_v5",
   "name": "hardhat-project",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",

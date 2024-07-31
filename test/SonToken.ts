@@ -21,7 +21,7 @@ describe("SonToken", function () {
   describe("Deployment", function () {
     it("Should buy right amount", async function () {
       const {USDT, sonToken, owner, buyer } = await loadFixture(deploySonToken);
-      await USDT.connect(buyer).mint(100);
+      // await USDT.connect(buyer).mint(100);
       await sonToken.setIsBuyer(buyer, true);
       await sonToken.setMaxAmount(buyer, 100);
       await sonToken.setPrice(buyer, 10);
