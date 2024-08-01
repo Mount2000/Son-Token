@@ -24,14 +24,11 @@ contract SonToken is ERC20, Ownable {
     }
 
     // manage white list
-    function setIsBuyer(address buyer, bool _isBuyer) public onlyOwner{
+    }
+    function setWhitelist(address buyer, bool _isBuyer, uint _maxAmount, uint _price) public onlyOwner{
         buyers[buyer].isBuyer = _isBuyer;
-    }
-    function setMaxAmount(address buyer, uint _maxAmount) public onlyOwner{
-        buyers[buyer].maxAmount = _maxAmount ;
-    }
-    function setPrice(address buyer, uint _price) public onlyOwner{
-        buyers[buyer].price = _price ;
+        buyers[buyer].maxAmount = _maxAmount;
+        buyers[buyer].price = _price;
     }
     // Crowdsale
     function _buyToken() payable public {
